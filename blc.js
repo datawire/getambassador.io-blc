@@ -15,28 +15,31 @@ const ambassador_docs_dirs = [
 	'yaml',
 ];
 
-function main(baseurl) {
+function main(siteURL) {
 
-	const baseu = new URL(baseurl);
+	const site = new URL(siteURL);
 	const handleLink = function(result) {
 		if (result.broken === true) {
 			console.log(`Page ${result.base.resolved} has a broken link: "${result.url.original}" (${result.brokenReason})`);
 		} else if (result.url.resolved === null) {
 			// skip
 		} else {
-			let u = new URL(result.url.resolved);
-			if (u.hostname ===  'blog.getambassador.io') {
+			let src = new URL(result.base.resolved);
+			let dst = new URL(result.url.resolved);
+			if (dst.hostname === 'blog.getambassador.io') {
 				// skip
-			} else if (u.hostname.endsWith('getambassador.io') || u.hostname.endsWith(baseu.hostname)) {
+			} else if (dst.hostname.endsWith('getambassador.io') || dst.hostname.endsWith(site.hostname)) {
 				// This is an internal link--validate that it's relative.
-				let srcpath = (new URL(result.base.resolved)).pathname;
-				let dstpath = u.pathname;
 				let dstIsAbsolute = (result.url.original === result.url.resolved) || result.url.original.startsWith('/');
-				let srcIsAmbassadorDocs = ambassador_docs_dirs.includes(srcpath.split('/')[1]);
-				let dstIsAmbassadorDocs = ambassador_docs_dirs.includes(dstpath.split('/')[1]);
+				let srcIsAmbassadorDocs = ambassador_docs_dirs.includes(src.pathname.split('/')[1]);
+				let dstIsAmbassadorDocs = ambassador_docs_dirs.includes(dst.pathname.split('/')[1]);
 				if (srcIsAmbassadorDocs && dstIsAmbassadorDocs && dstIsAbsolute) {
-					let suggestion = path.relative(srcpath.replace(/\/[^/]*$/, '/'), dstpath);
-					console.log(`Page ${result.base.resolved} has a malformed link: "${result.url.original}" (did you mean "${suggestion}"?)`);
+					let suggestion = path.relative(src.pathname.replace(/\/[^/]*$/, '/'), dst.pathname) + dst.hash;
+					if (suggestion === "") {
+						console.log(`Page ${result.base.resolved} has a bad link: "${result.url.original}" is the same page it's already on!`);
+					} else {
+						console.log(`Page ${result.base.resolved} has a malformed link: "${result.url.original}" (did you mean "${suggestion}"?)`);
+					}
 				}
 			}
 		}
@@ -49,7 +52,9 @@ function main(baseurl) {
 	};
 	const handlers = {
 		robots: function(robots) {},
-		html: function(tree, robots, response, pageUrl) {},
+		html: function(tree, robots, response, pageURL) {
+			console.log("Processing", pageURL);
+		},
 		junk: handleLink,
 		link: handleLink,
 		page: function(error, pageURL) {
