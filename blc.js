@@ -42,7 +42,8 @@ function main(siteURL) {
 						console.log(`Page ${result.base.resolved} has an ugly link: "${result.url.original}" is an absolute path (did you mean "${suggestion}"?)`);
 					}
 				} else if (dstIsAbsoluteDomain) {
-					console.log(`Page ${result.base.resolved} has an ugly link: "${result.url.original}" has a domain (did you mean "${dst.path + dst.hash}"?)`);
+					let suggestion = dst.pathname + dst.hash;
+					console.log(`Page ${result.base.resolved} has an ugly link: "${result.url.original}" has a domain (did you mean "${suggestion}"?)`);
 				}
 			}
 		}
