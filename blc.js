@@ -72,7 +72,30 @@ function main(siteURL) {
 
 	siteChecker = new blc.SiteChecker(options, handlers);
 
-	siteChecker.enqueue(baseurl);
+	siteChecker.enqueue(siteURL);
+	// pages that no other page links to... :(
+	if (!siteURL.endsWith('/')) {
+		siteURL += '/';
+	}
+	siteChecker.enqueue(siteURL+'about/roadmap');
+	siteChecker.enqueue(siteURL+'docs');
+	siteChecker.enqueue(siteURL+'docs/test-in-prod');
+	siteChecker.enqueue(siteURL+'libraries');
+	siteChecker.enqueue(siteURL+'reference/config-format');
+	siteChecker.enqueue(siteURL+'reference/core/annotations');
+	siteChecker.enqueue(siteURL+'reference/pro/authentication');
+	siteChecker.enqueue(siteURL+'reference/pro/environment');
+	siteChecker.enqueue(siteURL+'reference/upgrading');
+	siteChecker.enqueue(siteURL+'user-guide/config-ambassador');
+	siteChecker.enqueue(siteURL+'user-guide/consul-connect-ambassador');
+	siteChecker.enqueue(siteURL+'user-guide/developers');
+	siteChecker.enqueue(siteURL+'user-guide/downloads');
+	siteChecker.enqueue(siteURL+'user-guide/enabling-authentication');
+	siteChecker.enqueue(siteURL+'user-guide/incremental-migration-ambassador');
+	siteChecker.enqueue(siteURL+'user-guide/kubernetes-integration');
+	siteChecker.enqueue(siteURL+'user-guide/operators');
+	siteChecker.enqueue(siteURL+'user-guide/protocol-support-ambassador');
+	siteChecker.enqueue(siteURL+'user-guide/service-mesh-integration');
 };
 
 main(process.argv.slice(2)[0] || 'https://www.getambassador.io/');
