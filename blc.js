@@ -37,13 +37,22 @@ function main(siteURL) {
 				let srcIsAmbassadorDocs = ambassador_docs_dirs.includes(src.pathname.split('/')[1]);
 				let dstIsAmbassadorDocs = ambassador_docs_dirs.includes(dst.pathname.split('/')[1]);
 				if (srcIsAmbassadorDocs && dstIsAmbassadorDocs && dstIsAbsolutePath) {
+					// links within ambassador-docs.git should always be relative
+					// (this way, they work wherever you're browsing them)
 					let suggestion = path.relative(src.pathname.replace(/\/[^/]*$/, '/'), dst.pathname) + dst.hash;
 					if (suggestion === "") {
 						console.log(`Page ${result.base.resolved} has an ugly link: "${result.url.original}" is the same page it's already on!`);
 					} else {
 						console.log(`Page ${result.base.resolved} has an ugly link: "${result.url.original}" is an absolute path (did you mean "${suggestion}"?)`);
 					}
+				} else if (srcIsAmbassadorDocs && !result.url.original.startsWith('https://www.getambassador.io/')) {
+					// links from ambassador-docs.git to getambassador.io.git should always be absolute
+					// (this way, they work when browsing ambassador-docs.git or ambassador.git, at the expense of not doing the right thing in netlify previews)
+					let suggestion = (new URL(dst.pathname + dst.hash, 'https://www.getambassador.io/')).toString();
+					console.log(`Page ${result.base.resolved} has an ugly link: "${result.url.original}" is does not start with "https://www.getambassador.io/" (did you mean "${suggestion}"?)`);
 				} else if (dstIsAbsoluteDomain) {
+					// links within getambassador.io.git should not mention the scheme or domain
+					// (this way, they work in netlify previews)
 					let suggestion = dst.pathname + dst.hash;
 					console.log(`Page ${result.base.resolved} has an ugly link: "${result.url.original}" has a domain (did you mean "${suggestion}"?)`);
 				}
