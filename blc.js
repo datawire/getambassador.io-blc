@@ -3,6 +3,18 @@
 const blc = require('broken-link-checker');
 const path = require('path');
 
+// list of directories in ambassador-docs.git
+const ambassador_docs_dirs = [
+	'about',
+	'concepts',
+	'doc-images',
+	'docs',
+	'kat',
+	'reference',
+	'user-guide',
+	'yaml',
+];
+
 function main(baseurl) {
 
 	const baseu = new URL(baseurl);
@@ -17,9 +29,12 @@ function main(baseurl) {
 				// skip
 			} else if (u.hostname.endsWith('getambassador.io') || u.hostname.endsWith(baseu.hostname)) {
 				// This is an internal link--validate that it's relative.
-				if ((result.url.original === result.url.resolved) || result.url.original.startsWith('/')) {
-					let srcpath = (new URL(result.base.resolved)).pathname;
-					let dstpath = u.pathname;
+				let srcpath = (new URL(result.base.resolved)).pathname;
+				let dstpath = u.pathname;
+				let dstIsAbsolute = (result.url.original === result.url.resolved) || result.url.original.startsWith('/');
+				let srcIsAmbassadorDocs = ambassador_docs_dirs.includes(srcpath.split('/')[1]);
+				let dstIsAmbassadorDocs = ambassador_docs_dirs.includes(dstpath.split('/')[1]);
+				if (srcIsAmbassadorDocs && dstIsAmbassadorDocs && dstIsAbsolute) {
 					let suggestion = path.relative(srcpath.replace(/\/[^/]*$/, '/'), dstpath);
 					console.log(`Page ${result.base.resolved} has a malformed link: "${result.url.original}" (did you mean "${suggestion}"?)`);
 				}
