@@ -36,9 +36,14 @@ function main(siteURL) {
 				// This is an internal link--validate that it's relative.
 				let dstIsAbsolutePath = (result.url.original === result.url.resolved) || result.url.original.startsWith('/');
 				let dstIsAbsoluteDomain = (result.url.original === result.url.resolved) || result.url.original.startsWith('//');
-				let srcIsAmbassadorDocs = ambassador_docs_dirs.includes(src.pathname.split('/')[1]);
-				let dstIsAmbassadorDocs = ambassador_docs_dirs.includes(dst.pathname.split('/')[1]);
-				if (srcIsAmbassadorDocs && dstIsAmbassadorDocs && dstIsAbsolutePath) {
+				let srcIsGAAmbassadorDocs = ambassador_docs_dirs.includes(src.pathname.split('/')[1]);
+				let dstIsGAAmbassadorDocs = ambassador_docs_dirs.includes(dst.pathname.split('/')[1]);
+				let srcIsEAAmbassadorDocs = src.pathname.split('/')[1] === 'early-access';
+				let dstIsEAAmbassadorDocs = dst.pathname.split('/')[1] === 'early-access';
+				if (srcIsEAAmbassadorDocs && dstIsGAAmbassadorDocs) {
+					let suggestion = path.relative(src.pathname.replace(/\/[^/]*$/, '/'), '/early-access/'+dst.pathname) + dst.hash;
+					console.log(`Page ${result.base.resolved} has bad link: "${result.url.original}" goes to GA docs from EA docs (did you mean "${suggestion}"?)`);
+				} else if (srcIsEAAmbassadorDocs && dstIsEAAmbassadorDocs && dstIsAbsolutePath) {
 					// links within ambassador-docs.git should always be relative
 					// (this way, they work wherever you're browsing them)
 					let suggestion = path.relative(src.pathname.replace(/\/[^/]*$/, '/'), dst.pathname) + dst.hash;
