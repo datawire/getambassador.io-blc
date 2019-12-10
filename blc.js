@@ -25,6 +25,8 @@ function main(siteURL) {
 			// skip
 		} else if (result.url.original === "/user-guide/getting-started#from-banner") {
 			// hack: skip
+		} else if (result.url.original === "/user-guide/install#from-aes-page") {
+			// hack: skip
 		} else {
 			let src = new URL(result.base.resolved);
 			let dst = new URL(result.url.resolved);
