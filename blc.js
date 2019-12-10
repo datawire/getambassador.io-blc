@@ -30,16 +30,19 @@ function main(siteURL) {
 				// skip
 			} else if (dst.hostname.endsWith('getambassador.io') || dst.hostname.endsWith(site.hostname)) {
 				// This is an internal link--validate that it's relative.
-				let dstIsAbsolute = (result.url.original === result.url.resolved) || result.url.original.startsWith('/');
+				let dstIsAbsolutePath = (result.url.original === result.url.resolved) || result.url.original.startsWith('/');
+				let dstIsAbsoluteDomain = (result.url.original === result.url.resolved) || result.url.original.startsWith('//');
 				let srcIsAmbassadorDocs = ambassador_docs_dirs.includes(src.pathname.split('/')[1]);
 				let dstIsAmbassadorDocs = ambassador_docs_dirs.includes(dst.pathname.split('/')[1]);
-				if (srcIsAmbassadorDocs && dstIsAmbassadorDocs && dstIsAbsolute) {
+				if (srcIsAmbassadorDocs && dstIsAmbassadorDocs && dstIsAbsolutePath) {
 					let suggestion = path.relative(src.pathname.replace(/\/[^/]*$/, '/'), dst.pathname) + dst.hash;
 					if (suggestion === "") {
-						console.log(`Page ${result.base.resolved} has a bad link: "${result.url.original}" is the same page it's already on!`);
+						console.log(`Page ${result.base.resolved} has an ugly link: "${result.url.original}" is the same page it's already on!`);
 					} else {
-						console.log(`Page ${result.base.resolved} has a malformed link: "${result.url.original}" (did you mean "${suggestion}"?)`);
+						console.log(`Page ${result.base.resolved} has an ugly link: "${result.url.original}" is an absolute path (did you mean "${suggestion}"?)`);
 					}
+				} else if (dstIsAbsoluteDomain) {
+					console.log(`Page ${result.base.resolved} has an ugly link: "${result.url.original}" has a domain (did you mean "${dst.path + dst.hash}"?)`);
 				}
 			}
 		}
