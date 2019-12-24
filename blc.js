@@ -20,7 +20,17 @@ function main(siteURL) {
 	const site = new URL(siteURL);
 	const handleLink = function(result) {
 		if (result.broken === true) {
-			console.log(`Page ${result.base.resolved} has a broken link: "${result.url.original}" (${result.brokenReason})`);
+			switch (result.url.original) {
+			case "https://blog.getambassador.io/search?q=canary":
+			case "https://app.datadoghq.com/apm/traces":
+				break
+			default:
+				if (/^HTTP_5[0-9][0-9]$/.test(result.brokenReason)) {
+					// skip
+				} else {
+					console.log(`Page ${result.base.resolved} has a broken link: "${result.url.original}" (${result.brokenReason})`);
+				}
+			}
 		} else if (result.url.resolved === null) {
 			// skip
 		} else {
@@ -30,12 +40,12 @@ function main(siteURL) {
 				// skip
 			} else if (dst.hostname.endsWith('getambassador.io') || dst.hostname.endsWith(site.hostname)) {
 				// This is an internal link--validate that it's relative.
-				let dstIsAbsolutePath = (result.url.original === result.url.resolved) || result.url.original.startsWith('/');
-				let dstIsAbsoluteDomain = (result.url.original === result.url.resolved) || result.url.original.startsWith('//');
+				let dstIsAbsolutePath = (result.url.original === result.url.resolved) || (result.url.original + '/' === result.url.resolved) || result.url.original.startsWith('/');
+				let dstIsAbsoluteDomain = (result.url.original === result.url.resolved) || (result.url.original + '/' === result.url.resolved) || result.url.original.startsWith('//');
 				let srcIsGAAmbassadorDocs = ambassador_docs_dirs.includes(src.pathname.split('/')[1]);
 				let dstIsGAAmbassadorDocs = ambassador_docs_dirs.includes(dst.pathname.split('/')[1]);
-				let srcIsEAAmbassadorDocs = src.pathname.split('/')[1] === 'early-access';
-				let dstIsEAAmbassadorDocs = dst.pathname.split('/')[1] === 'early-access';
+				let srcIsEAAmbassadorDocs = /^\/early-access\/./.test(src.pathname);
+				let dstIsEAAmbassadorDocs = /^\/early-access\/./.test(dst.pathname);
 				if (srcIsEAAmbassadorDocs && dstIsGAAmbassadorDocs) {
 					let suggestion = path.relative(src.pathname.replace(/\/[^/]*$/, '/'), '/early-access/'+dst.pathname) + dst.hash;
 					console.log(`Page ${result.base.resolved} has bad link: "${result.url.original}" goes to GA docs from EA docs (did you mean "${suggestion}"?)`);
@@ -48,17 +58,12 @@ function main(siteURL) {
 					} else {
 						console.log(`Page ${result.base.resolved} has an ugly link: "${result.url.original}" is an absolute path (did you mean "${suggestion}"?)`);
 					}
-				} /*else if (srcIsAmbassadorDocs && !dstIsAmbassadorDocs && !result.url.original.startsWith('https://www.getambassador.io/')) {
-					// links from ambassador-docs.git to getambassador.io.git should always be absolute
-					// (this way, they work when browsing ambassador-docs.git or ambassador.git, at the expense of not doing the right thing in netlify previews)
-					let suggestion = (new URL(dst.pathname + dst.hash, 'https://www.getambassador.io/')).toString();
-					console.log(`Page ${result.base.resolved} has an ugly link: "${result.url.original}" does not start with "https://www.getambassador.io/" (did you mean "${suggestion}"?)`);
-				} else if (!srcIsAmbassadorDocs && !dstIsAmbassadorDocs && dstIsAbsoluteDomain) {
-					// links within getambassador.io.git should not mention the scheme or domain
+				} else if (dstIsAbsoluteDomain) {
+					// links within getambassador.io should not mention the scheme or domain
 					// (this way, they work in netlify previews)
 					let suggestion = dst.pathname + dst.hash;
 					console.log(`Page ${result.base.resolved} has an ugly link: "${result.url.original}" has a domain (did you mean "${suggestion}"?)`);
-				}*/
+				}
 			}
 		}
 	};
