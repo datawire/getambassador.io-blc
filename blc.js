@@ -39,7 +39,7 @@ function main(siteURL) {
 				if (srcIsEAAmbassadorDocs && dstIsGAAmbassadorDocs) {
 					let suggestion = path.relative(src.pathname.replace(/\/[^/]*$/, '/'), '/early-access/'+dst.pathname) + dst.hash;
 					console.log(`Page ${result.base.resolved} has bad link: "${result.url.original}" goes to GA docs from EA docs (did you mean "${suggestion}"?)`);
-				} else if (srcIsEAAmbassadorDocs && dstIsEAAmbassadorDocs && dstIsAbsolutePath) {
+				} else if (srcIsEAAmbassadorDocs && dstIsEAAmbassadorDocs && dstIsAbsolutePath && dst.hash !== "#from-sidebar") {
 					// links within ambassador-docs.git should always be relative
 					// (this way, they work wherever you're browsing them)
 					let suggestion = path.relative(src.pathname.replace(/\/[^/]*$/, '/'), dst.pathname) + dst.hash;
