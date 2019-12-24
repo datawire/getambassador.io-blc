@@ -1,13 +1,16 @@
 {
   "name": "blc",
-  "version": "1.0.0",
-  "description": "",
+  "description": "Broken Link Checker for getambassador.io",
+  "author": {
+    "name": "Luke Shumaker",
+    "email": "lukeshu@datawire.io"
+  },
+  "private": true,
+  "license": "UNLICENSED",
   "main": "blc.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "ISC",
   "dependencies": {
     "broken-link-checker": "^0.7.8"
   }
