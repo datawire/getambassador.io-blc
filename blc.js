@@ -33,6 +33,8 @@ function main(siteURL) {
 			}
 		} else if (result.url.resolved === null) {
 			// skip
+		} else if (result.html.tagName === 'link' && result.html.attrName === 'href' && result.html.attrs.rel === 'canonical') {
+			// skip
 		} else {
 			let src = new URL(result.base.resolved);
 			let dst = new URL(result.url.resolved);
