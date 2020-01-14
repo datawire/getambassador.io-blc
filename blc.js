@@ -27,6 +27,8 @@ function main(siteURL) {
 			default:
 				if (/^HTTP_5[0-9][0-9]$/.test(result.brokenReason)) {
 					// skip
+				} else if (result.html.tagName === 'link' && result.html.attrName === 'href' && result.html.attrs.rel === 'canonical' && (new URL(result.url.resolved)).pathname === (new URL(result.base.resolved)).pathname) {
+					// skip
 				} else {
 					console.log(`Page ${result.base.resolved} has a broken link: "${result.url.original}" (${result.brokenReason})`);
 				}
