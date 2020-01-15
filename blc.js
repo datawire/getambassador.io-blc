@@ -27,6 +27,8 @@ function main(siteURL) {
 			default:
 				if (/^HTTP_5[0-9][0-9]$/.test(result.brokenReason)) {
 					// skip
+				} else if (result.brokenReason === 'HTTP_204' && result.url.resolved.startsWith('https://www.youtube.com/')) {
+					// skip
 				} else if (result.html.tagName === 'link' && result.html.attrName === 'href' && result.html.attrs.rel === 'canonical' && (new URL(result.url.resolved)).pathname === (new URL(result.base.resolved)).pathname) {
 					// skip
 				} else if (result.url.original === `https://github.com/datawire/ambassador-docs/tree/master${new URL(result.base.resolved).pathname.replace(/^\/early-access\//, "/").replace(/\/$/, ".md")}`) {
