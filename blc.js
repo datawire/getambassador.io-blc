@@ -31,13 +31,9 @@ function main(siteURL) {
 					// skip
 				} else if (result.html.tagName === 'link' && result.html.attrName === 'href' && result.html.attrs.rel === 'canonical' && (new URL(result.url.resolved)).pathname === (new URL(result.base.resolved)).pathname) {
 					// skip
-				} else if (result.url.original === `https://github.com/datawire/ambassador-docs/tree/master${new URL(result.base.resolved).pathname.replace(/^\/early-access\//, "/").replace(/\/$/, ".md")}`) {
+				} else if (result.url.original === `https://github.com/datawire/ambassador-docs/tree/master${new URL(result.base.resolved).pathname.replace(/\/$/, ".md")}`) {
 					// skip
-				} else if (result.url.original === `https://github.com/datawire/ambassador-docs/tree/master${new URL(result.base.resolved).pathname.replace(/^\/early-access\//, "/").replace(/\/$/, "/index.md")}`) {
-					// skip
-				} else if (result.url.original === `https://github.com/datawire/ambassador-docs/tree/early-access${new URL(result.base.resolved).pathname.replace(/^\/early-access\//, "/").replace(/\/$/, ".md")}`) {
-					// skip
-				} else if (result.url.original === `https://github.com/datawire/ambassador-docs/tree/early-access${new URL(result.base.resolved).pathname.replace(/^\/early-access\//, "/").replace(/\/$/, "/index.md")}`) {
+				} else if (result.url.original === `https://github.com/datawire/ambassador-docs/tree/master${new URL(result.base.resolved).pathname.replace(/\/$/, "/index.md")}`) {
 					// skip
 				} else {
 					console.log(`Page ${result.base.resolved} has a broken link: "${result.url.original}" (${result.brokenReason})`);
@@ -56,14 +52,9 @@ function main(siteURL) {
 				// This is an internal link--validate that it's relative.
 				let dstIsAbsolutePath = (result.url.original === result.url.resolved) || (result.url.original + '/' === result.url.resolved) || result.url.original.startsWith('/');
 				let dstIsAbsoluteDomain = (result.url.original === result.url.resolved) || (result.url.original + '/' === result.url.resolved) || result.url.original.startsWith('//');
-				let srcIsGAAmbassadorDocs = ambassador_docs_dirs.includes(src.pathname.split('/')[1]);
-				let dstIsGAAmbassadorDocs = ambassador_docs_dirs.includes(dst.pathname.split('/')[1]);
-				let srcIsEAAmbassadorDocs = /^\/early-access\/./.test(src.pathname);
-				let dstIsEAAmbassadorDocs = /^\/early-access\/./.test(dst.pathname);
-				if (srcIsEAAmbassadorDocs && dstIsGAAmbassadorDocs) {
-					let suggestion = path.relative(src.pathname.replace(/\/[^/]*$/, '/'), '/early-access/'+dst.pathname) + dst.hash;
-					console.log(`Page ${result.base.resolved} has bad link: "${result.url.original}" goes to GA docs from EA docs (did you mean "${suggestion}"?)`);
-				} else if (dstIsAbsoluteDomain) {
+				let srcIsAmbassadorDocs = ambassador_docs_dirs.includes(src.pathname.split('/')[1]);
+				let dstIsAmbassadorDocs = ambassador_docs_dirs.includes(dst.pathname.split('/')[1]);
+				if (dstIsAbsoluteDomain) {
 					// links within getambassador.io should not mention the scheme or domain
 					// (this way, they work in netlify previews)
 					let suggestion = dst.pathname + dst.hash;
