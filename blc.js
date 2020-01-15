@@ -63,15 +63,6 @@ function main(siteURL) {
 				if (srcIsEAAmbassadorDocs && dstIsGAAmbassadorDocs) {
 					let suggestion = path.relative(src.pathname.replace(/\/[^/]*$/, '/'), '/early-access/'+dst.pathname) + dst.hash;
 					console.log(`Page ${result.base.resolved} has bad link: "${result.url.original}" goes to GA docs from EA docs (did you mean "${suggestion}"?)`);
-				} else if (srcIsEAAmbassadorDocs && dstIsEAAmbassadorDocs && dstIsAbsolutePath && dst.hash !== "#from-sidebar") {
-					// links within ambassador-docs.git should always be relative
-					// (this way, they work wherever you're browsing them)
-					let suggestion = path.relative(src.pathname.replace(/\/[^/]*$/, '/'), dst.pathname) + dst.hash;
-					if (suggestion === "") {
-						console.log(`Page ${result.base.resolved} has an ugly link: "${result.url.original}" is the same page it's already on!`);
-					} else {
-						console.log(`Page ${result.base.resolved} has an ugly link: "${result.url.original}" is an absolute path (did you mean "${suggestion}"?)`);
-					}
 				} else if (dstIsAbsoluteDomain) {
 					// links within getambassador.io should not mention the scheme or domain
 					// (this way, they work in netlify previews)
