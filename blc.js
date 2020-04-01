@@ -99,7 +99,7 @@ function main(siteURL) {
 	if (!siteURL.endsWith('/')) {
 		siteURL += '/';
 	}
-	siteChecker.enqueue(siteURL+'user-guide/downloads');
+	siteChecker.enqueue(siteURL+'reference/edgectl-download');
 };
 
 main(process.argv.slice(2)[0] || 'https://www.getambassador.io/');
