@@ -3,12 +3,13 @@
 const blc = require('broken-link-checker');
 const path = require('path');
 
-// list of directories in ambassador-docs.git
+// list of directories in ambassador.git/docs
 const ambassador_docs_dirs = [
 	'about',
 	'concepts',
 	'doc-images',
 	'docs',
+	'edgestack.me',
 	'kat',
 	'reference',
 	'user-guide',
@@ -33,9 +34,9 @@ function main(siteURL) {
 					// skip
 				} else if (result.html.tagName === 'link' && result.html.attrName === 'href' && result.html.attrs.rel === 'canonical' && (new URL(result.url.resolved)).pathname === (new URL(result.base.resolved)).pathname) {
 					// skip
-				} else if (result.url.original === `https://github.com/datawire/ambassador-docs/tree/master${new URL(result.base.resolved).pathname.replace(/\/$/, ".md")}`) {
+				} else if (result.url.original === `https://github.com/datawire/ambassador/tree/master/docs${new URL(result.base.resolved).pathname.replace(/\/$/, ".md")}`) {
 					// skip
-				} else if (result.url.original === `https://github.com/datawire/ambassador-docs/tree/master${new URL(result.base.resolved).pathname.replace(/\/$/, "/index.md")}`) {
+				} else if (result.url.original === `https://github.com/datawire/ambassador/tree/master/docs${new URL(result.base.resolved).pathname.replace(/\/$/, "/index.md")}`) {
 					// skip
 				} else {
 					console.log(`Page ${result.base.resolved} has a broken link: "${result.url.original}" (${result.brokenReason})`);
