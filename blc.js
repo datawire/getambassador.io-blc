@@ -30,6 +30,8 @@ function main(siteURL) {
 					// skip
 				} else if (result.brokenReason === 'HTTP_204' && result.url.resolved.startsWith('https://www.youtube.com/')) {
 					// skip
+				} else if (result.brokenReason === 'HTTP_429' && result.url.resolved.startsWith('https://www.youtube.com/')) {
+					// skip
 				} else if (result.brokenReason === 'HTTP_999' && result.url.resolved.startsWith('https://www.linkedin.com/')) {
 					// skip
 				} else if (result.html.tagName === 'link' && result.html.attrName === 'href' && result.html.attrs.rel === 'canonical' && (new URL(result.url.resolved)).pathname === (new URL(result.base.resolved)).pathname) {
