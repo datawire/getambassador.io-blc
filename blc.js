@@ -28,9 +28,9 @@ function main(siteURL) {
 			default:
 				if (/^HTTP_5[0-9][0-9]$/.test(result.brokenReason)) {
 					// skip
-				} else if (result.brokenReason === 'HTTP_204' && result.url.resolved.startsWith('https://www.youtube.com/')) {
+				} else if (result.brokenReason === 'HTTP_204' && (result.url.resolved.startsWith('https://www.youtube.com/') || result.url.resolved.startsWith('https://youtu.be/'))) {
 					// skip
-				} else if (result.brokenReason === 'HTTP_429' && result.url.resolved.startsWith('https://www.youtube.com/')) {
+				} else if (result.brokenReason === 'HTTP_429' && (result.url.resolved.startsWith('https://www.youtube.com/') || result.url.resolved.startsWith('https://youtu.be/'))) {
 					// skip
 				} else if (result.brokenReason === 'HTTP_999' && result.url.resolved.startsWith('https://www.linkedin.com/')) {
 					// skip
