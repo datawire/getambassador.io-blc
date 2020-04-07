@@ -36,9 +36,7 @@ function main(siteURL) {
 					// skip
 				} else if (result.html.tagName === 'link' && result.html.attrName === 'href' && result.html.attrs.rel === 'canonical' && (new URL(result.url.resolved)).pathname === (new URL(result.base.resolved)).pathname) {
 					// skip
-				} else if (result.url.original === `https://github.com/datawire/ambassador/tree/master/docs${new URL(result.base.resolved).pathname.replace(/\/$/, ".md")}`) {
-					// skip
-				} else if (result.url.original === `https://github.com/datawire/ambassador/tree/master/docs${new URL(result.base.resolved).pathname.replace(/\/$/, "/index.md")}`) {
+				} else if (result.html.text === 'Edit this page on GitHub') {
 					// skip
 				} else {
 					console.log(`Page ${result.base.resolved} has a broken link: "${result.url.original}" (${result.brokenReason})`);
