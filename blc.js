@@ -1,24 +1,10 @@
 #!/usr/bin/env node
 
 const blc = require('broken-link-checker');
-const path = require('path');
-
-// list of directories in ambassador.git/docs
-const ambassador_docs_dirs = [
-	'about',
-	'concepts',
-	'doc-images',
-	'docs',
-	'edgestack.me',
-	'kat',
-	'reference',
-	'user-guide',
-	'yaml',
-];
 
 function main(siteURL) {
-
 	const site = new URL(siteURL);
+
 	const handleLink = function(result) {
 		if (result.broken === true) {
 			switch (result.url.original) {
@@ -47,16 +33,12 @@ function main(siteURL) {
 		} else if (result.html.tagName === 'link' && result.html.attrName === 'href' && result.html.attrs.rel === 'canonical') {
 			// skip
 		} else {
-			let src = new URL(result.base.resolved);
 			let dst = new URL(result.url.resolved);
 			if (dst.hostname === 'blog.getambassador.io') {
 				// skip
 			} else if (dst.hostname.endsWith('getambassador.io') || dst.hostname.endsWith(site.hostname)) {
 				// This is an internal link--validate that it's relative.
-				let dstIsAbsolutePath = (result.url.original === result.url.resolved) || (result.url.original + '/' === result.url.resolved) || result.url.original.startsWith('/');
 				let dstIsAbsoluteDomain = (result.url.original === result.url.resolved) || (result.url.original + '/' === result.url.resolved) || result.url.original.startsWith('//');
-				let srcIsAmbassadorDocs = ambassador_docs_dirs.includes(src.pathname.split('/')[1]);
-				let dstIsAmbassadorDocs = ambassador_docs_dirs.includes(dst.pathname.split('/')[1]);
 				if (dstIsAbsoluteDomain) {
 					// links within getambassador.io should not mention the scheme or domain
 					// (this way, they work in netlify previews)
@@ -72,6 +54,7 @@ function main(siteURL) {
 		filterLevel: 3,
 		honorRobotExclusions: false,
 	};
+
 	const handlers = {
 		robots: function(robots) {},
 		html: function(tree, robots, response, pageURL) {
@@ -95,10 +78,13 @@ function main(siteURL) {
 	siteChecker = new blc.SiteChecker(options, handlers);
 
 	siteChecker.enqueue(siteURL);
+
 	// pages that no other page links to... :(
+
 	if (!siteURL.endsWith('/')) {
 		siteURL += '/';
 	}
+
 	siteChecker.enqueue(siteURL+'docs/latest/topics/install/help/aes-acme-challenge');
 	siteChecker.enqueue(siteURL+'docs/latest/topics/install/help/aes-crd-manifests');
 	siteChecker.enqueue(siteURL+'docs/latest/topics/install/help/aes-login');
@@ -124,7 +110,6 @@ function main(siteURL) {
 	siteChecker.enqueue(siteURL+'docs/latest/topics/install/help/no-kubectl');
 	siteChecker.enqueue(siteURL+'docs/latest/topics/install/help/wait-crds');
 	siteChecker.enqueue(siteURL+'docs/latest/topics/install/help/wait-for-aes');
-
 };
 
 main(process.argv.slice(2)[0] || 'https://www.getambassador.io/');
