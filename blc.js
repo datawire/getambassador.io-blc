@@ -99,6 +99,32 @@ function main(siteURL) {
 	if (!siteURL.endsWith('/')) {
 		siteURL += '/';
 	}
+	siteChecker.enqueue(siteURL+'docs/latest/topics/install/help/aes-acme-challenge');
+	siteChecker.enqueue(siteURL+'docs/latest/topics/install/help/aes-crd-manifests');
+	siteChecker.enqueue(siteURL+'docs/latest/topics/install/help/aes-login');
+	siteChecker.enqueue(siteURL+'docs/latest/topics/install/help/aes-manifests');
+	siteChecker.enqueue(siteURL+'docs/latest/topics/install/help/aes-pod-startup');
+	siteChecker.enqueue(siteURL+'docs/latest/topics/install/help/certificate-provision');
+	siteChecker.enqueue(siteURL+'docs/latest/topics/install/help/dns-name-body');
+	siteChecker.enqueue(siteURL+'docs/latest/topics/install/help/dns-name-post');
+	siteChecker.enqueue(siteURL+'docs/latest/topics/install/help/dns-propagation');
+	siteChecker.enqueue(siteURL+'docs/latest/topics/install/help/email-request');
+	siteChecker.enqueue(siteURL+'docs/latest/topics/install/help/existing-crds');
+	siteChecker.enqueue(siteURL+'docs/latest/topics/install/help/get-rest-config');
+	siteChecker.enqueue(siteURL+'docs/latest/topics/install/help/get-versions');
+	siteChecker.enqueue(siteURL+'docs/latest/topics/install/help/host-resource-creation');
+	siteChecker.enqueue(siteURL+'docs/latest/topics/install/help/host-retrieval');
+	siteChecker.enqueue(siteURL+'docs/latest/topics/install/help/incompatible-crd-versions');
+	siteChecker.enqueue(siteURL+'docs/latest/topics/install/help/install-aes');
+	siteChecker.enqueue(siteURL+'docs/latest/topics/install/help/install-crds');
+	siteChecker.enqueue(siteURL+'docs/latest/topics/install/help/load-balancer');
+	siteChecker.enqueue(siteURL+'docs/latest/topics/install/help/manifest-parsing');
+	siteChecker.enqueue(siteURL+'docs/latest/topics/install/help/new-for-config');
+	siteChecker.enqueue(siteURL+'docs/latest/topics/install/help/no-cluster');
+	siteChecker.enqueue(siteURL+'docs/latest/topics/install/help/no-kubectl');
+	siteChecker.enqueue(siteURL+'docs/latest/topics/install/help/wait-crds');
+	siteChecker.enqueue(siteURL+'docs/latest/topics/install/help/wait-for-aes');
+
 };
 
 main(process.argv.slice(2)[0] || 'https://www.getambassador.io/');
