@@ -30,7 +30,7 @@ function main(siteURL) {
 					// skip
 				} else if (result.brokenReason === 'HTTP_204' && (result.url.resolved.startsWith('https://www.youtube.com/') || result.url.resolved.startsWith('https://youtu.be/'))) {
 					// skip
-				} else if (result.brokenReason === 'HTTP_429' && (result.url.resolved.startsWith('https://www.youtube.com/') || result.url.resolved.startsWith('https://youtu.be/'))) {
+				} else if (result.brokenReason === 'HTTP_429') {
 					// skip
 				} else if (result.brokenReason === 'HTTP_999' && result.url.resolved.startsWith('https://www.linkedin.com/')) {
 					// skip
