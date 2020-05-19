@@ -34,7 +34,7 @@ function main(siteURL) {
 					// skip
 				} else if (result.brokenReason === 'HTTP_999' && result.url.resolved.startsWith('https://www.linkedin.com/')) {
 					// skip
-				} else if ((result.brokenReason === 'HTTP_unkown' || result.brokenReason === 'BLC_UNKNOWN') && result.url.resolved.startsWith('https://www.haproxy.org/')) {
+				} else if ((result.brokenReason === 'HTTP_undefined' || result.brokenReason === 'BLC_UNKNOWN') && result.url.resolved.startsWith('https://www.haproxy.org/')) {
 					// skip
 				} else if (result.html.tagName === 'link' && result.html.attrName === 'href' && result.html.attrs.rel === 'canonical' && (new URL(result.url.resolved)).pathname === (new URL(result.base.resolved)).pathname) {
 					// skip
