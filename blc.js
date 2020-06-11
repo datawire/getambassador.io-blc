@@ -34,6 +34,9 @@ function main(siteURL) {
 					// skip
 				} else if (result.brokenReason === 'HTTP_999' && result.url.resolved.startsWith('https://www.linkedin.com/')) {
 					// skip
+				} else if (result.brokenrReason === 'HTTP_404' && result.url.resolved === 'https://github.com/datawire/project-template/generate') {
+					// GitHub gives a 404 for 'generate' URLs unless you set the 'Accept:' header, and I don't know how to get broken-link-checker to set it.
+					// skip
 				} else if ((result.brokenReason === 'HTTP_undefined' || result.brokenReason === 'BLC_UNKNOWN') && result.url.resolved.startsWith('https://www.haproxy.org/')) {
 					// skip
 				} else if (result.html.tagName === 'link' && result.html.attrName === 'href' && result.html.attrs.rel === 'canonical' && (new URL(result.url.resolved)).pathname === (new URL(result.base.resolved)).pathname) {
@@ -73,6 +76,9 @@ function main(siteURL) {
 		excludeLinksToSamePage: false,
 		filterLevel: 3,
 		honorRobotExclusions: false,
+		requestMethod: "get", // instead of "head"; redis.io responds with a 404 to all HEAD requests (and the
+				      // most recent stable release of broken-link-checker still doesn't have the
+				      // retryHeadCodes setting that is on 'master')
 	};
 	const handlers = {
 		robots: function(robots) {},
