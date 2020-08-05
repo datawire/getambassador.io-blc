@@ -54,7 +54,7 @@ function main(siteURL) {
 		} else {
 			let src = new URL(result.base.resolved);
 			let dst = new URL(result.url.resolved);
-			if (dst.hostname === 'blog.getambassador.io') {
+			if (dst.hostname.startsWith('blog') || dst.hostname.startsWith('app') || dst.hostname.startsWith('k8sinitializer')) {
 				// skip
 			} else if (dst.hostname.endsWith('getambassador.io') || dst.hostname.endsWith(site.hostname)) {
 				// This is an internal link--validate that it's relative.
