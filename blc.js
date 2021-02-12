@@ -1,20 +1,6 @@
 #!/usr/bin/env node
 
 const blc = require('broken-link-checker');
-const path = require('path');
-
-// list of directories in ambassador.git/docs
-const ambassador_docs_dirs = [
-	'about',
-	'concepts',
-	'doc-images',
-	'docs',
-	'edgestack.me',
-	'kat',
-	'reference',
-	'user-guide',
-	'yaml',
-];
 
 function main(siteURL) {
 
@@ -24,6 +10,8 @@ function main(siteURL) {
 			switch (result.url.original) {
 			case "https://blog.getambassador.io/search?q=canary":
 			case "https://app.datadoghq.com/apm/traces":
+			case "https://www.chick-fil-a.com/":
+			case "http://verylargejavaservice:8080":
 				break
 			default:
 				if (/^HTTP_5[0-9][0-9]$/.test(result.brokenReason)) {
@@ -32,7 +20,7 @@ function main(siteURL) {
 					// skip
 				} else if (result.brokenReason === 'HTTP_429') {
 					// skip
-				} else if (result.brokenReason === 'HTTP_400' && result.url.resolved.startsWith('https://twitter.com/')) {
+				} else if (result.brokenReason === 'HTTP_400' && (result.url.resolved.startsWith('https://twitter.com/') || result.url.resolved.startsWith('https://www.twitter.com/'))) {
 					// skip
 				} else if (result.brokenReason === 'HTTP_999' && result.url.resolved.startsWith('https://www.linkedin.com/')) {
 					// skip
@@ -54,16 +42,12 @@ function main(siteURL) {
 		} else if (result.html.tagName === 'link' && result.html.attrName === 'href' && result.html.attrs.rel === 'canonical') {
 			// skip
 		} else {
-			let src = new URL(result.base.resolved);
 			let dst = new URL(result.url.resolved);
 			if (dst.hostname.startsWith('blog') || dst.hostname.startsWith('app') || dst.hostname.startsWith('k8sinitializer')) {
 				// skip
 			} else if (dst.hostname.endsWith('getambassador.io') || dst.hostname.endsWith(site.hostname)) {
 				// This is an internal link--validate that it's relative.
-				let dstIsAbsolutePath = (result.url.original === result.url.resolved) || (result.url.original + '/' === result.url.resolved) || result.url.original.startsWith('/');
 				let dstIsAbsoluteDomain = (result.url.original === result.url.resolved) || (result.url.original + '/' === result.url.resolved) || result.url.original.startsWith('//');
-				let srcIsAmbassadorDocs = ambassador_docs_dirs.includes(src.pathname.split('/')[1]);
-				let dstIsAmbassadorDocs = ambassador_docs_dirs.includes(dst.pathname.split('/')[1]);
 				if (dstIsAbsoluteDomain) {
 					// links within getambassador.io should not mention the scheme or domain
 					// (this way, they work in netlify previews)
