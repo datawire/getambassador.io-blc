@@ -20,7 +20,7 @@ function main(siteURL) {
 					// skip
 				} else if (result.brokenReason === 'HTTP_429') {
 					// skip
-				} else if (result.brokenReason === 'HTTP_400' && (result.url.resolved.startsWith('https://twitter.com/')) || result.url.resolved.startsWith('https://www.twitter.com/')) {
+				} else if (result.brokenReason === 'HTTP_400' && (result.url.resolved.startsWith('https://twitter.com/') || result.url.resolved.startsWith('https://www.twitter.com/'))) {
 					// skip
 				} else if (result.brokenReason === 'HTTP_999' && result.url.resolved.startsWith('https://www.linkedin.com/')) {
 					// skip
