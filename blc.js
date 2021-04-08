@@ -26,11 +26,13 @@ function main(siteURL) {
 				} else if (result.brokenReason === 'HTTP_404' && result.url.resolved === 'https://github.com/datawire/project-template/generate') {
 					// GitHub gives a 404 for 'generate' URLs unless you set the 'Accept:' header, and I don't know how to get broken-link-checker to set it.
 					// skip
-				} else if ((result.brokenReason === 'HTTP_undefined' || result.brokenReason === 'BLC_UNKNOWN') && (result.url.resolved.startsWith('https://www.haproxy.org/') || result.url.resolved.startsWith('http://verylargejavaservice'))) {
+				} else if ((result.brokenReason === 'HTTP_undefined' || result.brokenReason === 'BLC_UNKNOWN') && result.url.resolved.startsWith('https://www.haproxy.org/')) {
 					// skip
 				} else if (result.html.tagName === 'link' && result.html.attrName === 'href' && result.html.attrs.rel === 'canonical' && (new URL(result.url.resolved)).pathname === (new URL(result.base.resolved)).pathname) {
 					// skip
 				} else if (result.html.text === 'Edit this page on GitHub') {
+					// skip
+				} else if (result.url.resolved.startsWith('http://verylargejavaservice')) {
 					// skip
 				} else {
 					console.log(`Page ${result.base.resolved} has a broken link: "${result.url.original}" (${result.brokenReason})`);
