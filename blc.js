@@ -34,6 +34,10 @@ function main(siteURL) {
 					// skip
 				} else if (result.url.resolved.startsWith('http://verylargejavaservice')) {
 					// skip
+				} else if (result.url.resolved.startsWith('http://web-app.emojivoto')) {
+					// skip
+				} else if (result.url.resolved.startsWith('http://localhost:8080')) {
+					// skip
 				} else {
 					console.log(`Page ${result.base.resolved} has a broken link: "${result.url.original}" (${result.brokenReason})`);
 				}
